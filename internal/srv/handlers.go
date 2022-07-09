@@ -34,7 +34,7 @@ func (s *Server) readinessCheck(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) proxyOriginHandler(o *Origin) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		s.logger.Info("inside proxy origin handler func!",
+		s.logger.Debug("inside proxy origin handler func!",
 			zap.String("req.url", r.URL.String()),
 			zap.String("http.method", r.Method),
 		)

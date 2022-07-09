@@ -83,7 +83,7 @@ func (p *proxy) proxyRequest(w http.ResponseWriter, r *http.Request) {
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
 			return http.ErrUseLastResponse
 		},
-		Timeout:   120 * time.Second,
+		Timeout:   180 * time.Second,
 		Transport: tr,
 	}
 
