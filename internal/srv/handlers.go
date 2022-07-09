@@ -103,7 +103,7 @@ func (s *Server) handleOAuth2Callback(w http.ResponseWriter, r *http.Request) {
 		token.WithKey(s.signingKey),
 		token.WithSubject(claims.Email),
 		token.WithNotBefore(time.Now()),
-		token.WithExpire(time.Now().Add(5*time.Minute)),
+		token.WithExpire(time.Now().Add(60*time.Minute)),
 		token.WithPrivate(
 			struct {
 				Name       string `json:"name"`
