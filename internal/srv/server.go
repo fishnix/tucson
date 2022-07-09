@@ -194,7 +194,9 @@ func (s *Server) setup() *chi.Mux {
 				return
 			}
 
-			r.Use(s.Authenticator(tokenAuth))
+			if origin.Oidc {
+				r.Use(s.Authenticator(tokenAuth))
+			}
 
 			// TODO handle more than GET
 			r.Get(m.Path, s.proxyOriginHandler(origin))
