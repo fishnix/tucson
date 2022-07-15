@@ -186,16 +186,17 @@ func (s *Server) setup() *chi.Mux {
 
 	tokenAuth := jwtauth.New("HS256", []byte(s.signingKey), nil)
 
-	// public routes
-	r.Group(func(r chi.Router) {
-		for _, m := range s.matchers {
+	for _, m := range s.matchers {
+		r.Group(func(r chi.Router) {
 			origin, ok := s.origins[m.Origin]
 			if !ok {
 				s.logger.Warn("origin not found for matcher", zap.String("origin", m.Origin), zap.Any("matcher", m))
-				continue
+				return
 			}
 
-			r.Use(s.Authenticator(tokenAuth))
+			if origin.Oidc {
+				r.Use(s.Authenticator(tokenAuth))
+			}
 
 			// TODO handle more than GET
 			r.Get(m.Path, s.proxyOriginHandler(origin))
@@ -203,8 +204,8 @@ func (s *Server) setup() *chi.Mux {
 			r.Put(m.Path, s.proxyOriginHandler(origin))
 			r.Patch(m.Path, s.proxyOriginHandler(origin))
 			r.Delete(m.Path, s.proxyOriginHandler(origin))
-		}
-	})
+		})
+	}
 
 	// Default Backend Routes
 	r.Group(func(r chi.Router) {
